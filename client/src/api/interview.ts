@@ -23,6 +23,7 @@ export interface InterviewResponse {
   interviewId?: string;
   isFinalVerdict: boolean;
   nextInterviewerMessage: string;
+  feedback?: string;
   diagnosis: Diagnosis;
   finalScorecard: Scorecard | null;
 }
@@ -35,7 +36,7 @@ export interface StartInterviewParams {
 export interface SendMessageParams {
   interviewId: string | null;
   scenario: string;
-  history: Array<{ role: string; content: string }>;
+  history: Array<{ role: string; content: string; feedback?: string }>;
   candidateMessage: string;
   userId?: string;
 }

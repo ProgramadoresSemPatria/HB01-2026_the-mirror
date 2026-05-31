@@ -13,6 +13,7 @@ export type GapType = z.infer<typeof gapTypeSchema>;
 export const interviewTurnSchema = z.object({
   role: z.enum(['interviewer', 'candidate']),
   content: z.string().trim(),
+  feedback: z.string().trim().nullable().optional(),
 });
 
 export type InterviewTurn = z.infer<typeof interviewTurnSchema>;
@@ -44,6 +45,7 @@ export const interviewResponseSchema = z.object({
   interviewId: z.string().trim().optional(),
   isFinalVerdict: z.boolean(),
   nextInterviewerMessage: z.string().trim(),
+  feedback: z.string().trim().nullable().optional(),
   diagnosis: diagnosisSchema,
   finalScorecard: scorecardSchema.nullable(),
 });

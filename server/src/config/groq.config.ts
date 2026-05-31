@@ -83,7 +83,7 @@ class GroqConfig {
       const params: ChatCompletionCreateParams = {
         model: 'qwen/qwen3-32b',
         messages,
-        temperature: 0.6,
+        temperature: 0.85,
         max_completion_tokens: 4096,
         top_p: 0.95,
         stream: false,

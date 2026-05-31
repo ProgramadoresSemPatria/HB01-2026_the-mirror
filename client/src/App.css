@@ -781,3 +781,31 @@
   color: var(--mirror-text);
   border-color: var(--mirror-accent);
 }
+
+/* Candidate Feedback and Warnings */
+.mirror-bubble--candidate-feedback {
+  background: rgba(220, 38, 38, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.5) !important;
+  color: #fecaca !important;
+}
+
+.mirror-feedback-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  color: #facc15;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.mirror-feedback-icon {
+  color: #facc15;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
