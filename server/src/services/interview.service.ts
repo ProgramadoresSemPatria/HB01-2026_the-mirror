@@ -367,7 +367,9 @@ class InterviewService {
         data: {
           history: updatedHistoryJson,
           score: result.finalScorecard?.finalScore ?? null,
-          verdict: result.isFinalVerdict ? 'REPROVADO' : null,
+          verdict: result.isFinalVerdict
+            ? (result.finalScorecard && result.finalScorecard.finalScore >= 70 ? 'APROVADO' : 'REPROVADO')
+            : null,
           gapDetected: result.diagnosis?.gapDetected ?? null,
           evidence: result.diagnosis?.evidenceSpan ?? null,
           note: result.diagnosis?.note ?? null,

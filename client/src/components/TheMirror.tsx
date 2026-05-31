@@ -299,8 +299,15 @@ function VerdictScreen({
         className="mirror-verdict-card"
       >
         {/* Header */}
-        <div className="mirror-verdict-header">
-          <div className="mirror-verdict-stamp">REPROVADO</div>
+        <div className="mirror-verdict-header" style={{
+          background: finalScore >= 70 ? 'rgba(34, 197, 94, 0.15)' : 'rgba(220, 38, 38, 0.15)'
+        }}>
+          <div className="mirror-verdict-stamp" style={{
+            color: finalScore >= 70 ? '#22c55e' : 'var(--mirror-accent)',
+            borderColor: finalScore >= 70 ? '#22c55e' : 'var(--mirror-accent)'
+          }}>
+            {finalScore >= 70 ? 'APROVADO' : 'REPROVADO'}
+          </div>
           <h2 className="mirror-verdict-title">{scenarioTitle}</h2>
           <p className="mirror-verdict-subtitle">Relatório de Performance Técnica</p>
         </div>
