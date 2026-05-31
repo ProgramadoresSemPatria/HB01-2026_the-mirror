@@ -379,6 +379,15 @@ export default function TheMirrorPage({ userId }: { userId?: string }) {
       })
 
       if (data.interviewId) {
+        setInterviewId(data.interviewId)
+        setScenario(selectedScenario)
+        setTurns([{
+          role: 'interviewer',
+          content: data.nextInterviewerMessage,
+          diagnosis: data.diagnosis,
+        }])
+        setVerdict(null)
+        setAppState('INTERVIEW')
         navigate(`/interviews/session/${data.interviewId}`, { replace: true })
       }
     } catch (err: unknown) {
@@ -445,6 +454,9 @@ export default function TheMirrorPage({ userId }: { userId?: string }) {
 
   useEffect(() => {
     if (sessionInterviewId) {
+      if (interviewId === sessionInterviewId) {
+        return
+      }
       setIsLoading(true)
       interviewApi.getDetails(sessionInterviewId)
         .then((data) => {
@@ -502,7 +514,7 @@ export default function TheMirrorPage({ userId }: { userId?: string }) {
     setVerdict(null)
     setInterviewId(null)
     handleStart(selectedScenario.label)
-  }, [scenarioSlug, sessionInterviewId])
+  }, [scenarioSlug, sessionInterviewId, interviewId])
 
   return (
     <div className="mirror-root">
