@@ -1,0 +1,83 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Step {
+  PRESENTATION
+  PROBING
+  VERDICT
+}
+
+enum GapType {
+  HAPPY_PATH_ONLY
+  BUZZWORD_BLUFF
+  CHANGING_REQUIREMENTS
+  DEFENSIVE_RESPONSE
+  NONE
+}
+
+model Scenario {
+  id          String      @id @default(uuid())
+  title       String      @unique
+  description String
+  enunciation String
+  isLocked    Boolean     @default(false) @map("is_locked")
+  rules       Json
+  interviews  Interview[]
+
+  @@map("scenarios")
+}
+
+model User {
+  id           String           @id @default(uuid())
+  name         String
+  email        String           @unique
+  password     String           @map("password")
+  createdAt    DateTime         @default(now()) @map("created_at")
+  interviews   Interview[]
+  credentials  UserCredential[]
+
+  @@map("users")
+}
+
+model UserCredential {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  credentialId String   @unique @map("credential_id")
+  publicKey    String   @map("public_key")
+  counter      Int      @default(0)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_credentials")
+}
+
+model Interview {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  scenarioId   String   @map("scenario_id")
+  currentStep  Step     @default(PRESENTATION) @map("current_step")
+  turnCount    Int      @default(0) @map("turn_count")
+
+  score       Int?
+  verdict     String?
+  gapDetected GapType? @map("gap_detected")
+  evidence    String?
+  note        String?
+
+  failures    Json?
+  history     Json     @default("[]")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scenario Scenario @relation(fields: [scenarioId], references: [id])
+
+  @@map("interviews")
+}
