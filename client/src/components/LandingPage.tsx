@@ -204,7 +204,63 @@ function ChatBubble({ message, index }: { message: Message; index: number }) {
 }
 
 function InterviewSimulator({ isInView }: { isInView: boolean }) {
-  return <div />;
+  const [appState, setAppState] = useState<AppState>('setup');
+  const [selectedChallenge, setSelectedChallenge] = useState<Challenge | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(0);
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (appState !== 'interview') return;
+    if (visibleCount >= MOCK_TRANSCRIPT.length) return;
+
+    const delay = visibleCount === 0 ? 800 : 1200;
+    const timer = setTimeout(() => {
+      setMessages((prev) => [...prev, MOCK_TRANSCRIPT[visibleCount]]);
+      setVisibleCount((c) => c + 1);
+
+      if (visibleCount < MOCK_TRANSCRIPT.length - 1) {
+        setIsTyping(true);
+        setTimeout(() => setIsTyping(false), 900);
+      }
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [appState, visibleCount]);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
+
+  const handleSelectChallenge = (challenge: Challenge) => {
+    setSelectedChallenge(challenge);
+    setAppState('interview');
+    setMessages([]);
+    setVisibleCount(0);
+    setIsTyping(false);
+  };
+
+  const handleReset = () => {
+    setAppState('setup');
+    setSelectedChallenge(null);
+    setMessages([]);
+    setVisibleCount(0);
+  };
+
+  const handleSkipToVerdict = () => {
+    setAppState('verdict');
+  };
+
+  return (
+    <div className="relative">
+      <AnimatePresence mode="wait">
+        <div className="text-center py-12 text-text-muted">
+          Sessão: {appState}
+        </div>
+      </AnimatePresence>
+    </div>
+  );
 }
 
 export default function LandingPage() {
@@ -213,6 +269,12 @@ export default function LandingPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const { ref: revealRef, isInView: revealInView } = (() => {
+    const ref = useRef(null);
+    const isInView = useInView(ref, { once: true, amount: 0.2 });
+    return { ref, isInView };
+  })();
+
+  const { ref: simulatorRef, isInView: simulatorInView } = (() => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, amount: 0.2 });
     return { ref, isInView };
@@ -414,6 +476,13 @@ export default function LandingPage() {
               </motion.div>
             ))}
           </div>
+        </Container>
+      </section>
+
+      {/* Simulator / Challenges Section */}
+      <section ref={simulatorRef} className="relative bg-background pb-24 pt-12">
+        <Container className="relative">
+          <InterviewSimulator isInView={simulatorInView} />
         </Container>
       </section>
 
