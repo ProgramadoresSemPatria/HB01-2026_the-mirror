@@ -238,12 +238,36 @@ const ensureUserId = async (userId?: string) => {
   return fallbackUser.id;
 };
 
+const BUSINESS_SECTORS = [
+  'Fintech com alto volume de transações e concorrência',
+  'E-commerce preparando-se para pico de acessos repentinos (ex: Black Friday)',
+  'Plataforma SaaS multi-tenant B2B com relatórios pesados',
+  'Aplicativo de Delivery em tempo real com rastreamento ativo de geolocalização',
+  'Rede social de mídia com feeds de posts muito dinâmicos e cache agressivo',
+  'Plataforma de Streaming e upload assíncrono de grandes arquivos de vídeo',
+  'Sistema de Logística com cálculo de rotas concorrentes em tempo real'
+];
+
+const ARCHITECTURAL_CONSTRAINTS = [
+  'infraestrutura baseada em recursos severamente limitados de CPU e memória',
+  'banco de dados relacional com pool de conexões frequentemente sobrecarregado',
+  'alta latência ao comunicar com APIs externas críticas de parceiros',
+  'necessidade de segurança estrita de dados',
+  'requisito de alta disponibilidade e tolerância a falhas extremas em rede instável',
+  'migração ativa de dados legados rodando concorrentemente em background'
+];
+
 class InterviewService {
   async startInterview(scenario: string, userId?: string): Promise<InterviewResponse> {
+    const randomSector = BUSINESS_SECTORS[Math.floor(Math.random() * BUSINESS_SECTORS.length)];
+    const randomConstraint = ARCHITECTURAL_CONSTRAINTS[Math.floor(Math.random() * ARCHITECTURAL_CONSTRAINTS.length)];
+
     const contents = [
       {
         role: 'user',
-        parts: [{ text: `Inicie a entrevista sobre o cenário: ${scenario}` }],
+        parts: [{ 
+          text: `Inicie a entrevista sobre o cenário: ${scenario}. O caso de uso operacional e de negócio é: ${randomSector}, sob a restrição/detalhe de: ${randomConstraint}. Use essa contextualização para variar a história e a pergunta prática inicial de forma realista.` 
+        }],
       },
     ];
 

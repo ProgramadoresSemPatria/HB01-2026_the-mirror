@@ -30,7 +30,7 @@ class GeminiConfig {
       model: 'gemini-2.0-flash',
       config: {
         systemInstruction,
-        temperature: 0.7,
+        temperature: 0.85,
       },
       contents: contents,
     });
