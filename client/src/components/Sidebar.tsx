@@ -92,7 +92,10 @@ export function Sidebar() {
               history.map((item) => {
                 const isActive = location.pathname === `/interviews/session/${item.id}`;
                 const firstAiMsg = item.history?.find((turn) => turn.role === 'interviewer');
-                const displayName = firstAiMsg?.content || item.scenario.title;
+                const fullDisplayName = firstAiMsg?.content || item.scenario.title;
+                const displayName = fullDisplayName.length > 40
+                  ? fullDisplayName.substring(0, 40) + '...'
+                  : fullDisplayName;
                 return (
                   <div
                     key={item.id}
@@ -103,23 +106,23 @@ export function Sidebar() {
                   >
                     <Link
                       to={`/interviews/session/${item.id}`}
-                      className={`flex-1 flex flex-col px-4 py-2 pr-8 text-sm ${isActive ? 'text-white' : 'text-zinc-400 hover:text-white'}`}
+                      className={`flex-1 flex flex-col px-4 py-2 pr-8 text-sm min-w-0 ${isActive ? 'text-white' : 'text-zinc-400 hover:text-white'}`}
                     >
-                      <span className="font-medium truncate" title={displayName}>{displayName}</span>
+                      <span className="font-medium truncate block" title={fullDisplayName}>{displayName}</span>
                       <div className="flex items-center justify-between mt-1 text-[10px]">
-                        <span className="text-zinc-500">{new Date(item.createdAt).toLocaleDateString('pt-BR')}</span>
                         {item.verdict ? (
-                          <span className={`px-1 rounded-[3px] font-bold uppercase ${item.verdict === 'APROVADO'
+                          <span className={`px-1 py-0.5 rounded-[3px] font-bold uppercase ${item.verdict === 'APROVADO'
                               ? 'bg-green-500/10 text-green-400 border border-green-500/20'
                               : 'bg-red-500/10 text-red-400 border border-red-500/20'
                             }`}>
                             {item.verdict}
                           </span>
                         ) : (
-                          <span className="bg-zinc-500/10 text-zinc-400 border border-zinc-500/20 px-1 rounded-[3px] font-bold uppercase">
+                          <span className="bg-zinc-500/10 text-zinc-400 border border-zinc-500/20 px-1 py-0.5 rounded-[3px] font-bold uppercase">
                             Em progresso
                           </span>
                         )}
+                        <span className="text-zinc-500">{new Date(item.createdAt).toLocaleDateString('pt-BR')}</span>
                       </div>
                     </Link>
                     <button
