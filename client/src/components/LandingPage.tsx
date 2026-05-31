@@ -196,7 +196,52 @@ function ChallengeCard({
   challenge: Challenge;
   onSelect: (c: Challenge) => void;
 }) {
-  return <div />;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ y: -4 }}
+      className="group relative cursor-pointer rounded-3xl border border-border bg-background/2 p-8 backdrop-blur-xs transition-[background-color,box-shadow,border-color] duration-300 hover:border-primary/40 hover:bg-primary/5 hover:shadow-[0_0_40px_rgba(56,189,248,0.08)]"
+      onClick={() => onSelect(challenge)}
+      role="button"
+      tabIndex={0}
+      id={`challenge-card-${challenge.id}`}
+      onKeyDown={(e) => e.key === 'Enter' && onSelect(challenge)}
+    >
+      {/* Header — Icons removed per user request */}
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">{challenge.title}</h3>
+          <p className="text-xs text-text-muted">{challenge.stack}</p>
+        </div>
+        <span className={`rounded-full border border-border px-3 py-1 text-xs font-medium ${challenge.difficultyColor}`}>
+          {challenge.difficulty}
+        </span>
+      </div>
+
+      {/* Description */}
+      <p className="mb-6 leading-relaxed text-text-secondary">{challenge.description}</p>
+
+      {/* Tags */}
+      <div className="mb-6 flex flex-wrap gap-2">
+        {challenge.tags.map((tag) => (
+          <span
+            key={tag}
+            className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs text-text-muted"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* CTA */}
+      <div className="flex items-center gap-2 text-sm font-medium text-primary opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+        <ChatCircleDotsIcon size={16} weight="fill" />
+        <span>Entrar na entrevista →</span>
+      </div>
+    </motion.div>
+  );
 }
 
 function ChatBubble({ message, index }: { message: Message; index: number }) {
@@ -255,9 +300,56 @@ function InterviewSimulator({ isInView }: { isInView: boolean }) {
   return (
     <div className="relative">
       <AnimatePresence mode="wait">
-        <div className="text-center py-12 text-text-muted">
-          Sessão: {appState}
-        </div>
+        {/* State: Setup */}
+        {appState === 'setup' && (
+          <motion.div
+            key="setup"
+            id="desafios"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            {/* Section Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6 }}
+              className="mb-12 text-center"
+            >
+              <span className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary">
+                Escolha seu Desafio
+              </span>
+              <SectionHeading>
+                Problemas reais de produção.
+                <span className="text-primary"> Sem filtro.</span>
+              </SectionHeading>
+              <SectionDescription>
+                Cada cenário foi extraído de incidentes reais. Não existem perguntas fáceis. Escolha um desafio e prove que você sabe o que está fazendo.
+              </SectionDescription>
+            </motion.div>
+
+            {/* Challenge Cards Grid */}
+            <div className="grid gap-6 md:grid-cols-2">
+              {INTERVIEW_CHALLENGES.map((challenge, i) => (
+                <motion.div
+                  key={challenge.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.1 + i * 0.15 }}
+                >
+                  <ChallengeCard challenge={challenge} onSelect={handleSelectChallenge} />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {appState !== 'setup' && (
+          <div className="text-center py-12 text-text-muted">
+            Sessão: {appState}
+          </div>
+        )}
       </AnimatePresence>
     </div>
   );
