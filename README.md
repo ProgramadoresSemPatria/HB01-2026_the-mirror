@@ -85,6 +85,8 @@ npm run dev
 | `GROQ_API_KEY` | Groq API Key |
 | `GEMINI_API_KEY`| Google Gemini API Key |
 | `JWT_SECRET` | Secret key used for JWT signing |
+| `ALLOWED_ORIGINS` | List of allowed origins (comma-separated) |
+
 
 > **Note:** You must provide at least one valid LLM API Key (`GROQ_API_KEY` or `GEMINI_API_KEY`) depending on which AI provider you configure in your backend settings. By default, the application will look for the Groq configuration.
 
